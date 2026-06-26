@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chapter II — The Ceremony · Beneath The Sicilian Vows</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black:    #08080E;
+      --gold:     #C9A96E;
+      --gold-dim: #8A6E42;
+      --gold-pale:#E8D5A8;
+      --silver:   #D6D2C8;
+      --mist:     #9A9690;
+      --white:    #F0ECE4;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--black); color: var(--silver); font-family: 'Inter', sans-serif; font-weight: 300; overflow-x: hidden; min-height: 100vh; cursor: none; }
+
+    #cursor { position: fixed; top:0; left:0; z-index:9999; pointer-events:none; width:10px; height:10px; background:var(--gold); border-radius:50%; transform:translate(-50%,-50%); transition:width .3s,height .3s; mix-blend-mode:difference; }
+    #cursor-ring { position:fixed; top:0; left:0; z-index:9998; pointer-events:none; width:36px; height:36px; border:1px solid rgba(201,169,110,.4); border-radius:50%; transform:translate(-50%,-50%); transition:transform .35s cubic-bezier(.25,.1,.25,1),width .3s,height .3s; }
+    #page-veil { position:fixed; inset:0; z-index:9000; background:var(--black); pointer-events:none; opacity:0; transition:opacity .55s ease; }
+    #page-veil.active { opacity:1; pointer-events:all; }
+    #read-progress { position:fixed; top:0; left:0; height:2px; background:linear-gradient(to right,var(--gold-dim),var(--gold)); z-index:200; width:0%; transition:width .1s linear; }
+
+    nav { position:fixed; top:0; left:0; right:0; z-index:100; padding:20px 48px; display:flex; align-items:center; justify-content:space-between; background:linear-gradient(to bottom,rgba(8,8,14,.95) 0%,transparent 100%); transition:background .4s; }
+    nav.scrolled { background:rgba(8,8,14,.97); border-bottom:1px solid rgba(201,169,110,.1); }
+    .nav-logo { font-family:'Cormorant Garamond',serif; font-size:.85rem; letter-spacing:.15em; color:var(--gold); text-decoration:none; text-transform:uppercase; }
+    .nav-links { display:flex; gap:32px; list-style:none; }
+    .nav-links a { font-size:.7rem; letter-spacing:.12em; text-transform:uppercase; color:var(--mist); text-decoration:none; transition:color .3s; }
+    .nav-links a:hover { color:var(--gold); }
+
+    .chapter-header { padding:155px 0 70px; text-align:center; position:relative; overflow:hidden; }
+    .chapter-header::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(61,31,42,.35) 0%,transparent 70%); }
+    .chapter-bg-roman { font-family:'Cormorant Garamond',serif; font-size:clamp(6rem,14vw,12rem); font-weight:300; line-height:1; color:rgba(201,169,110,.055); position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); pointer-events:none; user-select:none; white-space:nowrap; }
+    .chapter-eyebrow { font-size:.62rem; letter-spacing:.3em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:18px; position:relative; }
+    .chapter-num-label { font-family:'Cormorant Garamond',serif; font-size:.78rem; letter-spacing:.22em; text-transform:uppercase; color:var(--gold); margin-bottom:10px; position:relative; }
+    .chapter-title-main { font-family:'Cormorant Garamond',serif; font-size:clamp(2.4rem,5.5vw,4.2rem); font-weight:300; font-style:italic; color:var(--white); margin-bottom:28px; position:relative; }
+    .chapter-ornament { display:flex; align-items:center; justify-content:center; gap:16px; position:relative; }
+    .chapter-ornament::before,.chapter-ornament::after { content:''; width:56px; height:1px; background:linear-gradient(to right,transparent,var(--gold-dim)); }
+    .chapter-ornament::after { transform:scaleX(-1); }
+    .chapter-ornament span { font-size:.5rem; color:var(--gold); letter-spacing:.3em; }
+
+    .story-wrap { max-width:668px; margin:0 auto; padding:60px 32px 100px; }
+
+    .opening-quote { font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-style:italic; font-weight:300; color:var(--gold-pale); line-height:1.75; border-left:2px solid var(--gold-dim); padding-left:22px; margin:0 0 52px; opacity:0; transform:translateY(18px); transition:opacity .85s ease,transform .85s ease; }
+    .opening-quote.visible { opacity:1; transform:translateY(0); }
+
+    .story-para { font-family:'Cormorant Garamond',serif; font-size:1.13rem; font-weight:300; line-height:1.95; color:var(--silver); margin-bottom:26px; opacity:0; transform:translateY(14px); transition:opacity .7s ease,transform .7s ease; }
+    .story-para.visible { opacity:1; transform:translateY(0); }
+    .story-para.dropcap::first-letter { font-family:'Cormorant Garamond',serif; font-size:4.4rem; font-weight:600; color:var(--gold); float:left; line-height:.76; margin:6px 11px 0 0; }
+    .story-para em { font-style:italic; color:var(--white); }
+
+    .scene-break { text-align:center; color:var(--gold-dim); letter-spacing:.35em; margin:44px 0; font-size:.75rem; opacity:0; transform:translateY(10px); transition:opacity .6s ease,transform .6s ease; }
+    .scene-break.visible { opacity:1; transform:translateY(0); }
+
+    /* ceremony vow lines */
+    .vow-line { font-family:'Cormorant Garamond',serif; font-size:1rem; font-style:italic; color:var(--mist); text-align:center; letter-spacing:.05em; margin-bottom:10px; opacity:0; transform:translateY(10px); transition:opacity .7s ease,transform .7s ease; }
+    .vow-line.visible { opacity:1; transform:translateY(0); }
+    .vow-answer { font-family:'Cormorant Garamond',serif; font-size:1.5rem; font-weight:600; color:var(--white); text-align:center; letter-spacing:.12em; margin:8px 0 28px; opacity:0; transform:translateY(10px); transition:opacity .7s ease,transform .7s ease; }
+    .vow-answer.visible { opacity:1; transform:translateY(0); }
+
+    /* whisper message */
+    .whisper { font-family:'Cormorant Garamond',serif; font-size:1.15rem; font-style:italic; color:var(--gold-pale); text-align:center; letter-spacing:.08em; margin:32px 0; opacity:0; transform:translateY(10px); transition:opacity .7s ease,transform .7s ease; }
+    .whisper.visible { opacity:1; transform:translateY(0); }
+
+    .chapter-nav { border-top:1px solid rgba(201,169,110,.12); padding:44px 32px; max-width:668px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; }
+    .ch-nav-btn { display:flex; align-items:center; gap:12px; text-decoration:none; color:var(--mist); font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; transition:color .3s; }
+    .ch-nav-btn:hover { color:var(--gold); }
+    .ch-nav-btn .arrow { font-size:1.1rem; transition:transform .3s; }
+    .ch-nav-btn:hover .arrow { transform:translateX(-4px); }
+    .ch-nav-btn.next:hover .arrow { transform:translateX(4px); }
+    .ch-nav-btn .ch-label { font-family:'Cormorant Garamond',serif; font-size:.95rem; font-style:italic; display:block; color:var(--silver); }
+    .ch-nav-mini { font-size:.62rem; letter-spacing:.15em; text-transform:uppercase; color:var(--mist); display:block; margin-bottom:3px; }
+    .ch-nav-center { font-family:'Cormorant Garamond',serif; font-size:.72rem; letter-spacing:.2em; color:var(--gold-dim); text-transform:uppercase; text-decoration:none; transition:color .3s; }
+    .ch-nav-center:hover { color:var(--gold); }
+
+    #scroll-top { position:fixed; bottom:36px; right:36px; width:42px; height:42px; border:1px solid rgba(201,169,110,.3); border-radius:50%; background:rgba(8,8,14,.85); color:var(--gold); font-size:.95rem; display:flex; align-items:center; justify-content:center; cursor:none; opacity:0; transform:translateY(8px); transition:opacity .3s,transform .3s,border-color .3s; text-decoration:none; }
+    #scroll-top.visible { opacity:1; transform:translateY(0); }
+    #scroll-top:hover { border-color:var(--gold); }
+
+    @media(max-width:600px){ nav{padding:16px 20px;} .story-wrap{padding:44px 20px 72px;} .chapter-nav{padding:28px 20px;flex-direction:column;gap:20px;text-align:center;} }
+  </style>
+</head>
+<body>
+
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
+  <div id="page-veil"></div>
+  <div id="read-progress"></div>
+
+  <nav id="nav">
+    <a class="nav-logo" href="index.html">Beneath The Sicilian Vows</a>
+    <ul class="nav-links">
+      <li><a href="index.html#chapters">Chapters</a></li>
+      <li><a href="index.html#synopsis">Synopsis</a></li>
+      <li><a href="https://www.wattpad.com/story/413009524" target="_blank">Wattpad</a></li>
+    </ul>
+  </nav>
+
+  <header class="chapter-header">
+    <div class="chapter-bg-roman">II</div>
+    <p class="chapter-eyebrow">Beneath The Sicilian Vows</p>
+    <p class="chapter-num-label">Chapter Two</p>
+    <h1 class="chapter-title-main">The Ceremony</h1>
+    <div class="chapter-ornament"><span>✦</span></div>
+  </header>
+
+  <article class="story-wrap">
+
+    <blockquote class="opening-quote reveal">
+      "Langit Sicily pagi itu terlalu cerah untuk sesuatu yang bakal menjadi gelap."
+    </blockquote>
+
+    <p class="story-para dropcap reveal">
+      Di dalam villa, suasana bergerak perlahan tapi tegang — seperti semua orang sedang berjalan di atas kaca yang tidak kelihatan retak di mana.
+    </p>
+
+    <p class="story-para reveal">
+      Xandra berdiri di depan cermin panjang. Gaun putih itu tergantung di tubuhnya tanpa makna. Bukan simbol cinta. Bukan simbol masa depan. Hanya kain yang mahal, untuk sebuah keputusan yang dibuat oleh orang lain — atas nama orang lain.
+    </p>
+
+    <p class="story-para reveal">
+      Di belakangnya, Datin Shila tidak berkata banyak. Hanya membetulkan lipatan gaun di bahu Xandra dengan jari yang sedikit gemetar.
+    </p>
+
+    <p class="story-para reveal">
+      <em>"Jangan lawan terlalu jelas,"</em> suara ibunya perlahan. <em>"Bukan semua perang perlu dimenangi hari ini."</em>
+    </p>
+
+    <p class="story-para reveal">
+      Xandra tidak menoleh. <em>"Kalau saya tak lawan sekarang, Ma..."</em> suaranya rendah, tapi tegas. <em>"...saya takkan ada peluang untuk lawan langsung."</em>
+    </p>
+
+    <p class="story-para reveal">
+      Sunyi mengisi bilik itu seperti air mengisi bekas yang retak — perlahan, tapi pasti.
+    </p>
+
+    <div class="scene-break reveal">─ · ─</div>
+
+    <p class="story-para reveal">
+      Lokasi perkahwinan — sebuah bangunan lama yang diubah suai di tepi laut Sicily — berasa lebih seperti ritual daripada perayaan. Tiada muzik yang melampau. Tiada ketawa palsu yang terlalu kuat. Hanya orang-orang yang sedar mereka sedang berdiri di dalam sesuatu yang jauh lebih besar daripada sekadar majlis kahwin.
+    </p>
+
+    <p class="story-para reveal">
+      Ini bukan acara sosial. Ini perjanjian kuasa.
+    </p>
+
+    <p class="story-para reveal">
+      Xavier tiba tanpa sebarang drama. Tiada senyuman untuk media. Tiada interaksi yang tidak perlu. Hanya langkah yang stabil dan berat — seperti seseorang yang sudah lama memiliki ruang itu sebelum orang lain sempat masuk.
+    </p>
+
+    <p class="story-para reveal">
+      Taufiq mengikut sedikit di belakang. <em>"Keluarga dia dah sampai,"</em> katanya perlahan.
+    </p>
+
+    <p class="story-para reveal">
+      Xavier hanya angguk sekali. <em>"Dia?"</em>
+    </p>
+
+    <p class="story-para reveal">
+      Taufiq faham tanpa perlu nama disebut. <em>"Belum."</em>
+    </p>
+
+    <p class="story-para reveal">
+      Xavier tidak menunjukkan reaksi. Tapi jarinya mengetat perlahan pada cufflink di pergelangan tangan — gerakan kecil yang hanya Taufiq perasan selepas bertahun-tahun berada di sisinya.
+    </p>
+
+    <div class="scene-break reveal">─ · ─</div>
+
+    <p class="story-para reveal">
+      Xandra tiba lewat lima minit. Bukan kerana tidak bersedia. Tapi kerana dia memilih untuk tidak memberi dunia kepuasan melihat dia terlalu cepat menyerah.
+    </p>
+
+    <p class="story-para reveal">
+      Langkahnya tenang. Wajahnya tidak membaca apa-apa. Tapi matanya — matanya tidak pernah diam.
+    </p>
+
+    <p class="story-para reveal">
+      Bila dia melangkah masuk ke ruang utama, hampir semua perbualan terhenti. Bukan kerana dia pengantin. Tapi kerana cara dia berdiri seolah-olah dia tidak milik sesiapa — termasuk lelaki yang sedang menunggunya di hujung lorong itu.
+    </p>
+
+    <p class="story-para reveal">
+      Xavier memandangnya untuk pertama kali hari itu. Dan buat beberapa saat — dia tidak bergerak. Bukan kagum. Bukan lembut. Lebih kepada... mengukur. Seperti seseorang yang baru menyedari bahawa apa yang ada di hadapannya tidak boleh dikawal dengan cara yang biasa dia gunakan.
+    </p>
+
+    <p class="story-para reveal">
+      Xandra memandangnya balik. Dan dunia di antara mereka tidak pecah. Ia berhenti.
+    </p>
+
+    <div class="scene-break reveal">─ · ─</div>
+
+    <p class="story-para reveal">
+      Upacara bermula. Suara paderi kedengaran jauh — seperti datang dari dimensi lain. Tapi antara Xavier dan Xandra, tidak ada dimensi lain. Hanya ruang yang semakin sempit walaupun mereka tidak bergerak.
+    </p>
+
+    <p class="story-para reveal">
+      Xandra sedang memerhati Xavier — cara lelaki itu berdiri, cara matanya tidak merayau, cara rahangnya tidak mengendur walaupun sedikit. Lelaki ini tidak kelihatan seperti seseorang yang memerlukan perkahwinan. Dia kelihatan seperti seseorang yang mencipta peraturan — dan perkahwinan ini hanya salah satu daripadanya.
+    </p>
+
+    <p class="story-para reveal">
+      Dan itu jauh lebih berbahaya daripada mana-mana senjata.
+    </p>
+
+    <p class="vow-line reveal">"Do you take this man... to be your lawfully wedded husband?"</p>
+
+    <p class="story-para reveal">
+      Senyap. Semua mata beralih ke Xandra. Dia tidak menjawab segera — bukan kerana ragu, tapi kerana dia mahu setiap orang faham bahawa dia masih ada pilihan, walaupun hakikatnya tidak.
+    </p>
+
+    <p class="vow-answer reveal">Yes.</p>
+
+    <p class="story-para reveal">
+      Ringkas. Dingin. Seperti tandatangan di atas kontrak yang tidak boleh dibatalkan. Pandangan Xavier berubah sedikit — hampir tidak dapat dikesan. Bukan lega. Bukan puas. Sesuatu yang lain. Sesuatu yang dia sendiri tidak namakan.
+    </p>
+
+    <p class="vow-line reveal">"Do you take this woman... to be your lawfully wedded wife?"</p>
+
+    <p class="story-para reveal">
+      Semua orang menunggu. Taufiq memerhati dari sisi. Xandra tidak mengalihkan pandangan.
+    </p>
+
+    <p class="vow-answer reveal">Yes.</p>
+
+    <p class="story-para reveal">
+      Satu perkataan. Tapi cukup untuk mengubah struktur dua keluarga besar — dan mungkin, seluruh peta kuasa Sicily.
+    </p>
+
+    <div class="scene-break reveal">─ · ─</div>
+
+    <p class="story-para reveal">
+      Cincin disarungkan. Bukan cinta. Bukan air mata. Hanya — sentuhan jari Xavier yang terlalu lama untuk dipanggil kebetulan. Terlalu sedar untuk dipanggil tidak sengaja.
+    </p>
+
+    <p class="story-para reveal">
+      Xandra menarik tangannya semula, perlahan. Bukan cepat — kerana cepat akan kelihatan seperti takut. Tapi cukup untuk menghantar satu mesej yang jelas.
+    </p>
+
+    <p class="whisper reveal">𝑗𝑎𝑛𝑔𝑎𝑛 𝑏𝑖𝑎𝑠𝑎𝑘𝑎𝑛 𝑑𝑖𝑟𝑖...</p>
+
+    <p class="story-para reveal">
+      Xavier perasan. Dan dia tidak marah. Itu yang paling berbahaya.
+    </p>
+
+    <div class="scene-break reveal">─ · ─</div>
+
+    <p class="story-para reveal">
+      Selepas upacara, dunia bergerak seperti biasa — ucapan, gambar, perbincangan yang berbalut senyuman. Tapi Xavier dan Xandra masih dalam ruang yang sama tanpa benar-benar bercakap. Sehingga akhirnya, Xavier bergerak ke arahnya.
+    </p>
+
+    <p class="story-para reveal">
+      <em>"Awak nampak macam tak suka ini."</em>
+    </p>
+
+    <p class="story-para reveal">
+      <em>"Awak pula nampak macam tak peduli."</em>
+    </p>
+
+    <p class="story-para reveal">
+      <em>"Kalau saya tak peduli,"</em> jawab Xavier perlahan, <em>"awak tak akan berada di sini."</em>
+    </p>
+
+    <p class="story-para reveal">
+      Xandra senyum nipis. <em>"Jadi ini bukan tentang saya."</em>
+    </p>
+
+    <p class="story-para reveal">
+      <em>"Ini tentang kestabilan."</em>
+    </p>
+
+    <p class="story-para reveal">
+      Ayat itu bergantung di antara mereka seperti asap — tidak padat, tapi cukup untuk sesak.
+    </p>
+
+    <p class="story-para reveal">
+      <em>"Semua lelaki dalam dunia awak akan cakap benda yang sama."</em> Pause. <em>"Tapi awak yang paling jujur tentangnya."</em>
+    </p>
+
+    <p class="story-para reveal">
+      Xavier tidak menjawab. Kerana dia tahu itu bukan pujian.
+    </p>
+
+    <div class="scene-break reveal">─ · ─</div>
+
+    <p class="story-para reveal">
+      Dari jauh, Taufiq memerhati. Kai berbisik, <em>"Boss tak pernah diam lama dengan mana-mana perempuan."</em>
+    </p>
+
+    <p class="story-para reveal">
+      Khal menjawab tanpa menoleh, <em>"Sebab perempuan lain tak pernah lawan balik."</em>
+    </p>
+
+    <p class="story-para reveal" style="color:var(--gold-pale); font-style:italic; text-align:center; margin-top:16px;">
+      Dan di penghujung hari itu... Sicily menyaksikan satu perkahwinan yang tiada siapa tahu sama ada ia satu permulaan — atau perang yang baru sahaja dicetuskan.
+    </p>
+
+  </article>
+
+  <nav class="chapter-nav">
+    <a class="ch-nav-btn prev" href="chapter-01-palermo.html">
+      <span class="arrow">←</span>
+      <span>
+        <span class="ch-nav-mini">Sebelumnya</span>
+        <span class="ch-label">Palermo</span>
+      </span>
+    </a>
+    <a class="ch-nav-center" href="index.html#chapters">✦ Semua Chapter</a>
+    <a class="ch-nav-btn next" href="chapter-03-the-space-between.html">
+      <span style="text-align:right">
+        <span class="ch-nav-mini">Seterusnya</span>
+        <span class="ch-label">The Space Between</span>
+      </span>
+      <span class="arrow">→</span>
+    </a>
+  </nav>
+
+  <a href="#" id="scroll-top" aria-label="Scroll to top">↑</a>
+
+  <script>
+    const cursor=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
+    let mx=0,my=0,rx=0,ry=0;
+    document.addEventListener('mousemove',e=>{ mx=e.clientX; my=e.clientY; cursor.style.left=mx+'px'; cursor.style.top=my+'px'; });
+    (function animRing(){ rx+=(mx-rx)*.12; ry+=(my-ry)*.12; ring.style.left=rx+'px'; ring.style.top=ry+'px'; requestAnimationFrame(animRing); })();
+    document.querySelectorAll('a,button').forEach(el=>{ el.addEventListener('mouseenter',()=>{ cursor.style.width='6px'; cursor.style.height='6px'; ring.style.width='54px'; ring.style.height='54px'; }); el.addEventListener('mouseleave',()=>{ cursor.style.width='10px'; cursor.style.height='10px'; ring.style.width='36px'; ring.style.height='36px'; }); });
+
+    const nav=document.getElementById('nav');
+    window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',window.scrollY>60));
+
+    const bar=document.getElementById('read-progress');
+    window.addEventListener('scroll',()=>{ bar.style.width=(window.scrollY/(document.documentElement.scrollHeight-window.innerHeight)*100)+'%'; });
+
+    const stBtn=document.getElementById('scroll-top');
+    window.addEventListener('scroll',()=>stBtn.classList.toggle('visible',window.scrollY>400));
+    stBtn.addEventListener('click',e=>{ e.preventDefault(); window.scrollTo({top:0,behavior:'smooth'}); });
+
+    const io=new IntersectionObserver((entries)=>{ entries.forEach((e,i)=>{ if(e.isIntersecting){ setTimeout(()=>e.target.classList.add('visible'),i*55); io.unobserve(e.target); } }); },{threshold:.08,rootMargin:'0px 0px -28px 0px'});
+    document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+    const veil=document.getElementById('page-veil');
+    veil.style.cssText='opacity:1;transition:none';
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{ veil.style.transition='opacity 0.6s ease'; veil.style.opacity='0'; }));
+    document.querySelectorAll('a[href]').forEach(link=>{ const href=link.getAttribute('href'); if(!href||href.startsWith('#')||href.startsWith('http')) return; link.addEventListener('click',e=>{ e.preventDefault(); veil.style.opacity='1'; setTimeout(()=>window.location.href=href,540); }); });
+  </script>
+</body>
+</html>
