@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Beneath The Sicilian Vows — Xavier & Xandra</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Inter:wght@300;400;500&family=Playfair+Display:ital@1&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:    #08080E;
+      --deep:     #10101A;
+      --charcoal: #1A1A28;
+      --panel:    #14141F;
+      --gold:     #C9A96E;
+      --gold-dim: #8A6E42;
+      --gold-pale:#E8D5A8;
+      --silver:   #D6D2C8;
+      --mist:     #9A9690;
+      --wine:     #3D1F2A;
+      --wine-mid: #5C2D3D;
+      --white:    #F0ECE4;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--silver);
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* ─── CURSOR ─── */
+    body { cursor: none; }
+    #cursor {
+      position: fixed; top: 0; left: 0; z-index: 9999;
+      pointer-events: none;
+      width: 10px; height: 10px;
+      background: var(--gold);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
+      mix-blend-mode: difference;
+    }
+    #cursor-ring {
+      position: fixed; top: 0; left: 0; z-index: 9998;
+      pointer-events: none;
+      width: 36px; height: 36px;
+      border: 1px solid rgba(201,169,110,0.4);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: transform 0.35s cubic-bezier(0.25,0.1,0.25,1), width 0.3s ease, height 0.3s ease;
+    }
+
+    /* ─── HERO ─── */
+    #hero {
+      position: relative;
+      width: 100%; height: 100vh;
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* Sicily skyline layers */
+    .sky-layer {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 120% 60% at 50% 0%,
+          #1A0E2A 0%, #0D0818 30%, #08080E 65%);
+    }
+
+    /* Stars */
+    .stars {
+      position: absolute; inset: 0;
+      background-image:
+        radial-gradient(1px 1px at 15% 12%, rgba(232,212,168,0.9) 0%, transparent 100%),
+        radial-gradient(1px 1px at 28% 8%,  rgba(232,212,168,0.6) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 42% 15%, rgba(232,212,168,0.8) 0%, transparent 100%),
+        radial-gradient(1px 1px at 55% 6%,  rgba(232,212,168,0.7) 0%, transparent 100%),
+        radial-gradient(1px 1px at 68% 11%, rgba(232,212,168,0.5) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 78% 9%,  rgba(232,212,168,0.9) 0%, transparent 100%),
+        radial-gradient(1px 1px at 88% 14%, rgba(232,212,168,0.6) 0%, transparent 100%),
+        radial-gradient(1px 1px at 8%  20%, rgba(232,212,168,0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 22% 25%, rgba(232,212,168,0.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 35% 22%, rgba(232,212,168,0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 62% 18%, rgba(232,212,168,0.6) 0%, transparent 100%),
+        radial-gradient(1px 1px at 72% 23%, rgba(232,212,168,0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 92% 19%, rgba(232,212,168,0.7) 0%, transparent 100%),
+        radial-gradient(1px 1px at 5%  30%, rgba(232,212,168,0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 48% 27%, rgba(232,212,168,0.4) 0%, transparent 100%);
+    }
+
+    /* Moon glow */
+    .moon {
+      position: absolute;
+      top: 9%; right: 18%;
+      width: 60px; height: 60px;
+      background: radial-gradient(circle, #F0ECE4 0%, #D6C89A 40%, transparent 75%);
+      border-radius: 50%;
+      filter: blur(1px);
+      box-shadow: 0 0 40px 15px rgba(201,169,110,0.15), 0 0 80px 30px rgba(201,169,110,0.07);
+    }
+
+    /* Far hills */
+    .hills-far {
+      position: absolute; bottom: 32%; left: 0; right: 0;
+      height: 25%;
+      background:
+        radial-gradient(ellipse 30% 100% at 10% 100%, #1C1428 0%, transparent 100%),
+        radial-gradient(ellipse 25% 90% at 25% 100%, #181226 0%, transparent 100%),
+        radial-gradient(ellipse 35% 80% at 45% 100%, #14101E 0%, transparent 100%),
+        radial-gradient(ellipse 28% 95% at 65% 100%, #1A1228 0%, transparent 100%),
+        radial-gradient(ellipse 30% 85% at 82% 100%, #16102A 0%, transparent 100%),
+        radial-gradient(ellipse 20% 70% at 95% 100%, #12102A 0%, transparent 100%);
+      background-color: #12101E;
+      clip-path: polygon(
+        0% 100%, 0% 55%, 3% 48%, 7% 42%, 12% 35%, 16% 40%,
+        20% 32%, 25% 28%, 30% 35%, 35% 25%, 40% 32%, 45% 22%,
+        50% 30%, 55% 20%, 60% 28%, 65% 18%, 70% 26%, 75% 30%,
+        80% 20%, 85% 28%, 90% 22%, 95% 32%, 100% 28%, 100% 100%
+      );
+    }
+
+    /* City silhouette — dense buildings */
+    .city-silhouette {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 40%;
+      background-color: #08080C;
+      clip-path: polygon(
+        0% 100%,
+        0% 60%,   1.5% 60%,  1.5% 45%,  2% 45%,   2% 38%,   2.5% 38%,
+        2.5% 52%, 3% 52%,    3% 40%,    3.5% 40%,  3.5% 30%, 4% 30%,
+        4% 45%,   4.5% 45%,  4.5% 35%,  5% 35%,    5% 28%,   5.5% 28%,
+        5.5% 42%, 6% 42%,    6% 32%,    6.5% 32%,  6.5% 50%, 7% 50%,
+        7% 38%,   7.5% 38%,  7.5% 25%,  8% 25%,    8% 20%,   8.3% 20%,
+        8.3% 16%, 8.6% 16%,  8.6% 20%,  9% 20%,    9% 35%,   9.5% 35%,
+        9.5% 28%, 10% 28%,   10% 42%,   10.5% 42%, 10.5% 30%,11% 30%,
+        11% 50%,  11.5% 50%, 11.5% 36%, 12% 36%,   12% 22%,  12.5% 22%,
+        12.5% 40%,13% 40%,   13% 32%,   13.5% 32%, 13.5% 18%,14% 18%,
+        14% 14%,  14.3% 14%, 14.3% 12%, 14.6% 12%, 14.6% 14%,15% 14%,
+        15% 30%,  15.5% 30%, 15.5% 42%, 16% 42%,   16% 28%,  16.5% 28%,
+        16.5% 20%,17% 20%,   17% 35%,   17.5% 35%, 17.5% 25%,18% 25%,
+        18% 45%,  18.5% 45%, 18.5% 33%, 19% 33%,   19% 48%,  19.5% 48%,
+        19.5% 38%,20% 38%,   20% 22%,   20.5% 22%, 20.5% 16%,21% 16%,
+        21% 12%,  21.4% 12%, 21.4% 10%, 21.8% 10%, 21.8% 12%,22% 12%,
+        22% 30%,  22.5% 30%, 22.5% 40%, 23% 40%,   23% 28%,  23.5% 28%,
+        23.5% 45%,24% 45%,   24% 35%,   24.5% 35%, 24.5% 52%,25% 52%,
+        25% 40%,  25.5% 40%, 25.5% 30%, 26% 30%,   26% 18%,  26.5% 18%,
+        26.5% 14%,27% 14%,   27% 22%,   27.5% 22%, 27.5% 38%,28% 38%,
+        28% 48%,  28.5% 48%, 28.5% 35%, 29% 35%,   29% 25%,  29.5% 25%,
+        29.5% 42%,30% 42%,   30% 32%,   30.5% 32%, 30.5% 20%,31% 20%,
+        31% 16%,  31.4% 16%, 31.4% 12%, 31.8% 12%, 31.8% 16%,32% 16%,
+        32% 28%,  32.5% 28%, 32.5% 38%, 33% 38%,   33% 48%,  33.5% 48%,
+        33.5% 36%,34% 36%,   34% 24%,   34.5% 24%, 34.5% 32%,35% 32%,
+        35% 50%,  35.5% 50%, 35.5% 40%, 36% 40%,   36% 28%,  36.5% 28%,
+        36.5% 18%,37% 18%,   37% 14%,   37.4% 14%, 37.4% 8%, 37.8% 8%,
+        37.8% 14%,38% 14%,   38% 32%,   38.5% 32%, 38.5% 42%,39% 42%,
+        39% 30%,  39.5% 30%, 39.5% 22%, 40% 22%,   40% 36%,  40.5% 36%,
+        40.5% 50%,41% 50%,   41% 38%,   41.5% 38%, 41.5% 28%,42% 28%,
+        42% 20%,  42.5% 20%, 42.5% 32%, 43% 32%,   43% 44%,  43.5% 44%,
+        43.5% 35%,44% 35%,   44% 22%,   44.5% 22%, 44.5% 16%,45% 16%,
+        45% 12%,  45.4% 12%, 45.4% 8%,  45.8% 8%,  45.8% 12%,46% 12%,
+        46% 24%,  46.5% 24%, 46.5% 36%, 47% 36%,   47% 48%,  47.5% 48%,
+        47.5% 38%,48% 38%,   48% 28%,   48.5% 28%, 48.5% 18%,49% 18%,
+        49% 32%,  49.5% 32%, 49.5% 42%, 50% 42%,   50% 52%,  50.5% 52%,
+        50.5% 40%,51% 40%,   51% 30%,   51.5% 30%, 51.5% 20%,52% 20%,
+        52% 14%,  52.4% 14%, 52.4% 10%, 52.8% 10%, 52.8% 14%,53% 14%,
+        53% 26%,  53.5% 26%, 53.5% 38%, 54% 38%,   54% 28%,  54.5% 28%,
+        54.5% 44%,55% 44%,   55% 34%,   55.5% 34%, 55.5% 22%,56% 22%,
+        56% 40%,  56.5% 40%, 56.5% 30%, 57% 30%,   57% 18%,  57.5% 18%,
+        57.5% 12%,58% 12%,   58% 30%,   58.5% 30%, 58.5% 42%,59% 42%,
+        59% 32%,  59.5% 32%, 59.5% 22%, 60% 22%,   60% 36%,  60.5% 36%,
+        60.5% 50%,61% 50%,   61% 38%,   61.5% 38%, 61.5% 26%,62% 26%,
+        62% 18%,  62.5% 18%, 62.5% 14%, 63% 14%,   63% 10%,  63.4% 10%,
+        63.4% 6%, 63.8% 6%,  63.8% 10%, 64% 10%,   64% 22%,  64.5% 22%,
+        64.5% 34%,65% 34%,   65% 46%,   65.5% 46%, 65.5% 36%,66% 36%,
+        66% 25%,  66.5% 25%, 66.5% 38%, 67% 38%,   67% 28%,  67.5% 28%,
+        67.5% 18%,68% 18%,   68% 32%,   68.5% 32%, 68.5% 44%,69% 44%,
+        69% 34%,  69.5% 34%, 69.5% 22%, 70% 22%,   70% 16%,  70.5% 16%,
+        70.5% 28%,71% 28%,   71% 40%,   71.5% 40%, 71.5% 30%,72% 30%,
+        72% 20%,  72.5% 20%, 72.5% 14%, 73% 14%,   73% 10%,  73.4% 10%,
+        73.4% 7%, 73.8% 7%,  73.8% 10%, 74% 10%,   74% 24%,  74.5% 24%,
+        74.5% 36%,75% 36%,   75% 48%,   75.5% 48%, 75.5% 38%,76% 38%,
+        76% 28%,  76.5% 28%, 76.5% 18%, 77% 18%,   77% 32%,  77.5% 32%,
+        77.5% 44%,78% 44%,   78% 34%,   78.5% 34%, 78.5% 24%,79% 24%,
+        79% 40%,  79.5% 40%, 79.5% 30%, 80% 30%,   80% 18%,  80.5% 18%,
+        80.5% 14%,81% 14%,   81% 22%,   81.5% 22%, 81.5% 36%,82% 36%,
+        82% 48%,  82.5% 48%, 82.5% 38%, 83% 38%,   83% 26%,  83.5% 26%,
+        83.5% 16%,84% 16%,   84% 12%,   84.4% 12%, 84.4% 8%, 84.8% 8%,
+        84.8% 12%,85% 12%,   85% 28%,   85.5% 28%, 85.5% 40%,86% 40%,
+        86% 30%,  86.5% 30%, 86.5% 20%, 87% 20%,   87% 38%,  87.5% 38%,
+        87.5% 50%,88% 50%,   88% 40%,   88.5% 40%, 88.5% 28%,89% 28%,
+        89% 18%,  89.5% 18%, 89.5% 32%, 90% 32%,   90% 44%,  90.5% 44%,
+        90.5% 34%,91% 34%,   91% 22%,   91.5% 22%, 91.5% 16%,92% 16%,
+        92% 30%,  92.5% 30%, 92.5% 42%, 93% 42%,   93% 32%,  93.5% 32%,
+        93.5% 20%,94% 20%,   94% 36%,   94.5% 36%, 94.5% 48%,95% 48%,
+        95% 38%,  95.5% 38%, 95.5% 26%, 96% 26%,   96% 18%,  96.5% 18%,
+        96.5% 40%,97% 40%,   97% 52%,   97.5% 52%, 97.5% 42%,98% 42%,
+        98% 30%,  98.5% 30%, 98.5% 50%, 99% 50%,   99% 60%,  100% 60%,
+        100% 100%
+      );
+    }
+
+    /* City glow — warm lights */
+    .city-glow {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 42%;
+      background:
+        radial-gradient(ellipse 60% 30% at 50% 100%, rgba(201,169,110,0.08) 0%, transparent 70%),
+        radial-gradient(ellipse 30% 20% at 20% 100%, rgba(180,120,60,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 30% 20% at 80% 100%, rgba(180,120,60,0.06) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    /* Window lights on buildings */
+    .city-lights {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 40%;
+      background-image:
+        radial-gradient(1.5px 2px at 8.3%  75%, rgba(201,169,110,0.8) 0%, transparent 100%),
+        radial-gradient(1px 1.5px at 14.4% 68%, rgba(201,169,110,0.6) 0%, transparent 100%),
+        radial-gradient(1.5px 2px at 21%   72%, rgba(201,169,110,0.9) 0%, transparent 100%),
+        radial-gradient(1px 2px at 27%     62%, rgba(220,190,120,0.7) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 31.5% 75%,rgba(201,169,110,0.8) 0%, transparent 100%),
+        radial-gradient(1px 2px at 37.8% 68%, rgba(201,169,110,0.6) 0%, transparent 100%),
+        radial-gradient(1.5px 2px at 45.6% 72%, rgba(201,169,110,0.9) 0%, transparent 100%),
+        radial-gradient(2px 2px at 52.8%  65%, rgba(220,190,120,0.7) 0%, transparent 100%),
+        radial-gradient(1px 1.5px at 63.8% 70%,rgba(201,169,110,0.8) 0%, transparent 100%),
+        radial-gradient(1.5px 2px at 73.5% 68%, rgba(201,169,110,0.6) 0%, transparent 100%),
+        radial-gradient(1px 2px at 84.4%  72%, rgba(201,169,110,0.9) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 92% 65%,rgba(201,169,110,0.7) 0%, transparent 100%),
+        radial-gradient(1px 2px at 10%   82%, rgba(201,169,110,0.5) 0%, transparent 100%),
+        radial-gradient(1.5px 2px at 18%  80%, rgba(201,169,110,0.7) 0%, transparent 100%),
+        radial-gradient(1px 1.5px at 25%  85%,rgba(201,169,110,0.4) 0%, transparent 100%),
+        radial-gradient(2px 2px at 34%    78%, rgba(220,190,120,0.6) 0%, transparent 100%),
+        radial-gradient(1.5px 2px at 44%  82%, rgba(201,169,110,0.8) 0%, transparent 100%),
+        radial-gradient(1px 2px at 58%    80%, rgba(201,169,110,0.5) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 67% 85%,rgba(201,169,110,0.6) 0%, transparent 100%),
+        radial-gradient(1px 2px at 76%    78%, rgba(201,169,110,0.8) 0%, transparent 100%),
+        radial-gradient(2px 2px at 88%    82%, rgba(220,190,120,0.5) 0%, transparent 100%),
+        radial-gradient(1px 1.5px at 96%  80%,rgba(201,169,110,0.6) 0%, transparent 100%);
+    }
+
+    /* Sea at base */
+    .sea {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 12%;
+      background: linear-gradient(
+        to bottom,
+        #0D0D18 0%,
+        #0A0A14 40%,
+        #080810 100%
+      );
+    }
+    .sea-shimmer {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 12%;
+      background:
+        repeating-linear-gradient(
+          90deg,
+          transparent 0%, transparent 18%,
+          rgba(201,169,110,0.03) 20%, transparent 22%
+        ),
+        repeating-linear-gradient(
+          90deg,
+          transparent 0%, transparent 38%,
+          rgba(201,169,110,0.04) 40%, transparent 42%
+        ),
+        radial-gradient(ellipse 40% 30% at 50% 20%, rgba(201,169,110,0.06) 0%, transparent 100%);
+    }
+
+    /* Fog overlay */
+    .fog {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 40% at 50% 100%, rgba(20,14,30,0.7) 0%, transparent 70%),
+        linear-gradient(to bottom, rgba(8,8,14,0.1) 0%, rgba(8,8,14,0) 50%, rgba(8,8,14,0.5) 100%);
+      pointer-events: none;
+    }
+
+    /* ─── HERO CONTENT ─── */
+    .hero-content {
+      position: relative; z-index: 10;
+      text-align: center;
+      padding: 0 2rem;
+      animation: fadeUp 1.6s cubic-bezier(0.16,1,0.3,1) forwards;
+      opacity: 0; transform: translateY(30px);
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-eyebrow {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      margin-bottom: 1.8rem;
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.2rem, 9vw, 8rem);
+      font-weight: 300;
+      line-height: 0.92;
+      color: var(--white);
+      letter-spacing: -0.01em;
+      text-shadow:
+        0 0 80px rgba(201,169,110,0.25),
+        0 0 160px rgba(201,169,110,0.1);
+      margin-bottom: 0.3em;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--gold);
+      text-shadow:
+        0 0 40px rgba(201,169,110,0.5),
+        0 0 80px rgba(201,169,110,0.2);
+    }
+
+    .hero-subtitle {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1rem, 2.5vw, 1.4rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--mist);
+      letter-spacing: 0.05em;
+      margin-bottom: 3rem;
+    }
+
+    .hero-divider {
+      width: 1px; height: 60px;
+      background: linear-gradient(to bottom, transparent, var(--gold-dim), transparent);
+      margin: 0 auto 2.5rem;
+    }
+
+    .hero-tags {
+      display: flex; gap: 1.2rem; justify-content: center; flex-wrap: wrap;
+    }
+
+    .tag {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      border: 1px solid rgba(201,169,110,0.2);
+      padding: 0.4rem 1rem;
+      transition: border-color 0.3s ease, color 0.3s ease;
+    }
+
+    .tag:hover {
+      border-color: rgba(201,169,110,0.6);
+      color: var(--gold);
+    }
+
+    /* Scroll indicator */
+    .scroll-hint {
+      position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 0.6rem;
+      animation: fadeUp 2s 1s cubic-bezier(0.16,1,0.3,1) forwards;
+      opacity: 0;
+    }
+
+    .scroll-hint span {
+      font-size: 0.55rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+    }
+
+    .scroll-line {
+      width: 1px; height: 40px;
+      background: linear-gradient(to bottom, var(--gold-dim), transparent);
+      animation: scrollPulse 2.5s ease-in-out infinite;
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.3; transform: scaleY(1); }
+      50% { opacity: 0.9; transform: scaleY(1.3); }
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 1.5rem 3rem;
+      display: flex; align-items: center; justify-content: space-between;
+      background: linear-gradient(to bottom, rgba(8,8,14,0.8), transparent);
+      backdrop-filter: blur(0px);
+      transition: background 0.4s ease;
+    }
+
+    nav.scrolled {
+      background: rgba(8,8,14,0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(201,169,110,0.08);
+    }
+
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      color: var(--white);
+    }
+
+    .nav-logo em { color: var(--gold); font-style: italic; }
+
+    .nav-links {
+      display: flex; gap: 2.5rem; list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--mist);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .nav-links a:hover { color: var(--gold); }
+
+    /* ─── SYNOPSIS ─── */
+    #synopsis {
+      position: relative;
+      padding: 8rem 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .section-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.58rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      margin-bottom: 3rem;
+      display: flex; align-items: center; justify-content: center; gap: 1rem;
+    }
+
+    .section-label::before, .section-label::after {
+      content: '';
+      width: 40px; height: 1px;
+      background: var(--gold-dim);
+      opacity: 0.5;
+    }
+
+    .synopsis-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.5;
+      color: var(--white);
+      margin-bottom: 3rem;
+    }
+
+    .synopsis-body {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      line-height: 1.9;
+      color: var(--mist);
+      max-width: 620px;
+      margin: 0 auto 3rem;
+    }
+
+    /* ─── CHARACTERS ─── */
+    #characters {
+      padding: 6rem 2rem;
+      background: var(--deep);
+      border-top: 1px solid rgba(201,169,110,0.06);
+      border-bottom: 1px solid rgba(201,169,110,0.06);
+    }
+
+    .chars-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .chars-grid {
+      display: grid;
+      grid-template-columns: 1fr 80px 1fr;
+      gap: 0;
+      align-items: center;
+      margin-top: 4rem;
+    }
+
+    .char-card {
+      padding: 3rem;
+      position: relative;
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .char-card.visible { opacity: 1; transform: translateY(0); }
+
+    .char-card:first-child { text-align: right; transition-delay: 0.1s; }
+    .char-card:last-child { text-align: left; transition-delay: 0.3s; }
+
+    .char-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.8rem;
+      font-weight: 300;
+      color: var(--white);
+      letter-spacing: 0.05em;
+      margin-bottom: 0.3rem;
+    }
+
+    .char-role {
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      margin-bottom: 1.5rem;
+    }
+
+    .char-desc {
+      font-size: 0.85rem;
+      line-height: 1.8;
+      color: var(--mist);
+    }
+
+    .char-divider {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--gold);
+    }
+
+    .char-divider .amp {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.5rem;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--gold);
+      text-shadow: 0 0 30px rgba(201,169,110,0.4);
+    }
+
+    .char-divider .line {
+      width: 1px; height: 50px;
+      background: linear-gradient(to bottom, var(--gold-dim), transparent);
+    }
+
+    .char-divider .line-top {
+      width: 1px; height: 50px;
+      background: linear-gradient(to top, var(--gold-dim), transparent);
+    }
+
+    /* ─── CHAPTERS ─── */
+    #chapters {
+      padding: 8rem 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .chapters-list {
+      margin-top: 4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .chapter-item {
+      display: grid;
+      grid-template-columns: 60px 1fr auto;
+      align-items: center;
+      gap: 2rem;
+      padding: 1.6rem 0;
+      border-bottom: 1px solid rgba(201,169,110,0.06);
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      opacity: 0; transform: translateX(-15px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .chapter-item.visible { opacity: 1; transform: translateX(0); }
+
+    .chapter-item::before {
+      content: '';
+      position: absolute; left: 0; bottom: 0;
+      width: 0; height: 1px;
+      background: var(--gold);
+      transition: width 0.4s ease;
+    }
+
+    .chapter-item:hover::before { width: 100%; }
+
+    .chapter-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      font-weight: 300;
+      color: rgba(201,169,110,0.25);
+      font-style: italic;
+    }
+
+    .chapter-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem;
+      font-weight: 400;
+      color: var(--silver);
+      transition: color 0.3s ease;
+    }
+
+    .chapter-item:hover .chapter-title { color: var(--white); }
+
+    .chapter-arrow {
+      font-size: 0.7rem;
+      color: rgba(201,169,110,0);
+      transition: color 0.3s ease, transform 0.3s ease;
+    }
+
+    .chapter-item:hover .chapter-arrow {
+      color: var(--gold-dim);
+      transform: translateX(4px);
+    }
+
+    /* ─── QUOTE SECTION ─── */
+    #quote {
+      padding: 8rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #quote::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 100% at 50% 50%, rgba(61,31,42,0.3) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .pull-quote {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+      line-height: 1.6;
+      color: var(--white);
+      max-width: 700px;
+      margin: 0 auto 2rem;
+      position: relative;
+    }
+
+    .pull-quote::before {
+      content: '\201C';
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 8rem;
+      color: rgba(201,169,110,0.08);
+      position: absolute;
+      top: -2rem; left: -1rem;
+      line-height: 1;
+    }
+
+    .quote-attr {
+      font-size: 0.62rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid rgba(201,169,110,0.08);
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 300;
+      color: var(--gold-dim);
+      font-style: italic;
+      margin-bottom: 1.5rem;
+    }
+
+    .footer-links {
+      display: flex; gap: 2rem; justify-content: center;
+      list-style: none;
+      margin-bottom: 2.5rem;
+    }
+
+    .footer-links a {
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--mist);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover { color: var(--gold); }
+
+    .footer-copy {
+      font-size: 0.65rem;
+      color: rgba(154,150,144,0.4);
+      letter-spacing: 0.1em;
+    }
+
+    /* ─── REVEAL ANIMATIONS ─── */
+    .reveal {
+      opacity: 0; transform: translateY(25px);
+      transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 768px) {
+      nav { padding: 1.2rem 1.5rem; }
+      .nav-links { display: none; }
+      .chars-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+      }
+      .char-card:first-child { text-align: left; }
+      .char-divider { flex-direction: row; }
+      .char-divider .line, .char-divider .line-top { width: 40px; height: 1px; background: linear-gradient(to right, transparent, var(--gold-dim)); }
+      .chapter-item { grid-template-columns: 40px 1fr auto; gap: 1rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Custom cursor -->
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
+
+  <!-- Navigation -->
+  <nav id="nav">
+    <div class="nav-logo">Beneath The <em>Sicilian</em> Vows</div>
+    <ul class="nav-links">
+      <li><a href="#synopsis">Synopsis</a></li>
+      <li><a href="#characters">Characters</a></li>
+      <li><a href="#chapters">Chapters</a></li>
+      <li><a href="https://www.wattpad.com" target="_blank">Wattpad ↗</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <section id="hero">
+    <div class="sky-layer"></div>
+    <div class="stars"></div>
+    <div class="moon"></div>
+    <div class="hills-far"></div>
+    <div class="city-silhouette"></div>
+    <div class="city-glow"></div>
+    <div class="city-lights"></div>
+    <div class="sea"></div>
+    <div class="sea-shimmer"></div>
+    <div class="fog"></div>
+
+    <div class="hero-content">
+      <p class="hero-eyebrow">Xavier &amp; Xandra · Sicily</p>
+      <h1 class="hero-title">
+        Beneath The<br>
+        <em>Sicilian Vows</em>
+      </h1>
+      <p class="hero-subtitle">Bukan cinta. Bukan kontrak. Sesuatu yang lebih berbahaya.</p>
+      <div class="hero-divider"></div>
+      <div class="hero-tags">
+        <span class="tag">Dark Romance</span>
+        <span class="tag">Mafia</span>
+        <span class="tag">Arranged Marriage</span>
+        <span class="tag">Slow Burn</span>
+      </div>
+    </div>
+
+    <div class="scroll-hint">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- Synopsis -->
+  <section id="synopsis">
+    <div class="section-label">Synopsis</div>
+    <p class="synopsis-quote reveal">
+      "Sicily tidak pernah peduli apa yang kau minta."
+    </p>
+    <p class="synopsis-body reveal">
+      Xandra tidak memilih perkahwinan ini. Xavier tidak meminta isteri. Tapi kontrak sudah 
+      ditandatangani — dan di bawah langit Sicily yang terlalu cerah untuk sesuatu yang gelap, 
+      dua orang asing mula mempelajari perkara yang paling berbahaya dari segala-galanya.
+      <br><br>
+      Bukan perasaan. Bukan perjanjian. Tapi kebiasaan. Dan kepercayaan yang tidak pernah 
+      diminta oleh sesiapa — tapi datang juga, perlahan, seperti angin laut yang tidak 
+      pernah berhenti walaupun tiada siapa menyuruhnya.
+    </p>
+  </section>
+
+  <!-- Characters -->
+  <section id="characters">
+    <div class="chars-inner">
+      <div class="section-label">Characters</div>
+      <div class="chars-grid">
+        <div class="char-card">
+          <div class="char-name">Xavier</div>
+          <div class="char-role">Hunwick · Sicily</div>
+          <p class="char-desc">
+            Lelaki yang menggerakkan Sicily dari balik tabir. Dingin, terkawal, dan berbahaya 
+            bukan kerana dia kuat — tapi kerana dia tidak pernah kehilangan kawalan. 
+            Sehingga dia bertemu seseorang yang tidak takut padanya.
+          </p>
+        </div>
+
+        <div class="char-divider">
+          <div class="line-top"></div>
+          <span class="amp">&amp;</span>
+          <div class="line"></div>
+        </div>
+
+        <div class="char-card">
+          <div class="char-name">Xandra</div>
+          <div class="char-role">Nostra Group · Kuala Lumpur</div>
+          <p class="char-desc">
+            Dia tidak memilih dunia ini. Tapi dia tidak akan menyerah pada dunia yang 
+            memilihnya. Berani, tajam, dan cukup bijak untuk tahu bila perlu diam — 
+            dan bila perlu bersuara.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Chapters -->
+  <section id="chapters">
+    <div class="section-label">Chapters</div>
+    <div class="chapters-list">
+      <a class="chapter-item" href="chapter-01-palermo.txt">
+        <span class="chapter-num">I</span>
+        <span class="chapter-title">Palermo</span>
+        <span class="chapter-arrow">→</span>
+      </a>
+      <a class="chapter-item" href="chapter-02-the-ceremony.txt">
+        <span class="chapter-num">II</span>
+        <span class="chapter-title">The Ceremony</span>
+        <span class="chapter-arrow">→</span>
+      </a>
+      <a class="chapter-item" href="chapter-03-the-space-between.txt">
+        <span class="chapter-num">III</span>
+        <span class="chapter-title">The Space Between</span>
+        <span class="chapter-arrow">→</span>
+      </a>
+      <a class="chapter-item" href="chapter-04-too-close.txt">
+        <span class="chapter-num">IV</span>
+        <span class="chapter-title">Too Close</span>
+        <span class="chapter-arrow">→</span>
+      </a>
+      <a class="chapter-item" href="chapter-05-permission.txt">
+        <span class="chapter-num">V</span>
+        <span class="chapter-title">Permission</span>
+        <span class="chapter-arrow">→</span>
+      </a>
+      <a class="chapter-item" href="chapter-06-dinner-for-two-strangers.txt">
+        <span class="chapter-num">VI</span>
+        <span class="chapter-title">Dinner For Two Strangers</span>
+        <span class="chapter-arrow">→</span>
+      </a>
+      <a class="chapter-item" href="chapter-07-neon-and-dark.txt">
+        <span class="chapter-num">VII</span>
+        <span class="chapter-title">Neon &amp; Dark</span>
+        <span class="chapter-arrow">→</span>
+      </a>
+      <a class="chapter-item" href="chapter-08-what-he-allowed.txt">
+        <span class="chapter-num">VIII</span>
+        <span class="chapter-title">What He Allowed</span>
+        <span class="chapter-arrow">→</span>
+      </a>
+      <a class="chapter-item" href="chapter-09-what-remains.txt">
+        <span class="chapter-num">IX</span>
+        <span class="chapter-title">What Remains</span>
+        <span class="chapter-arrow">→</span>
+      </a>
+      <a class="chapter-item" href="chapter-10-the-first-fracture.txt">
+        <span class="chapter-num">X</span>
+        <span class="chapter-title">The First Fracture</span>
+        <span class="chapter-arrow">→</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Pull Quote -->
+  <section id="quote">
+    <div class="pull-quote reveal">
+      Seseorang yang tak tahu nak letak orang lain di mana… biasanya bermaksud orang tu dah ada tempat. Cuma dia tak sedar lagi.
+    </div>
+    <p class="quote-attr">— Xandra, Chapter X</p>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-logo">Beneath The Sicilian Vows</div>
+    <ul class="footer-links">
+      <li><a href="#hero">Back to Top</a></li>
+      <li><a href="#chapters">Chapters</a></li>
+      <li><a href="https://www.wattpad.com" target="_blank">Read on Wattpad</a></li>
+      <li><a href="https://github.com" target="_blank">GitHub</a></li>
+    </ul>
+    <p class="footer-copy">Dark Romance · Sicily · Bahasa Malaysia</p>
+  </footer>
+
+  <script>
+    // Custom cursor
+    const cursor = document.getElementById('cursor');
+    const ring   = document.getElementById('cursor-ring');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      cursor.style.left = mx + 'px';
+      cursor.style.top  = my + 'px';
+    });
+
+    (function animRing() {
+      rx += (mx - rx) * 0.12;
+      ry += (my - ry) * 0.12;
+      ring.style.left = rx + 'px';
+      ring.style.top  = ry + 'px';
+      requestAnimationFrame(animRing);
+    })();
+
+    document.querySelectorAll('a, button, .tag').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursor.style.width = '6px'; cursor.style.height = '6px';
+        ring.style.width = '54px'; ring.style.height = '54px';
+      });
+      el.addEventListener('mouseleave', () => {
+        cursor.style.width = '10px'; cursor.style.height = '10px';
+        ring.style.width = '36px'; ring.style.height = '36px';
+      });
+    });
+
+    // Nav scroll state
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 60);
+    });
+
+    // Intersection Observer for reveals
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal, .char-card, .chapter-item').forEach(el => io.observe(el));
+
+    // Staggered chapter delays
+    document.querySelectorAll('.chapter-item').forEach((el, i) => {
+      el.style.transitionDelay = (i * 0.07) + 's';
+    });
+  </script>
+</body>
+</html>
