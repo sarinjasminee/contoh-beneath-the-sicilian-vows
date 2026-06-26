@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chapter III — The Space Between · Beneath The Sicilian Vows</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black:#08080E; --gold:#C9A96E; --gold-dim:#8A6E42; --gold-pale:#E8D5A8;
+      --silver:#D6D2C8; --mist:#9A9690; --white:#F0ECE4;
+    }
+    html { scroll-behavior: smooth; }
+    body { background:var(--black); color:var(--silver); font-family:'Inter',sans-serif; font-weight:300; overflow-x:hidden; min-height:100vh; cursor:none; }
+
+    #cursor { position:fixed; top:0; left:0; z-index:9999; pointer-events:none; width:10px; height:10px; background:var(--gold); border-radius:50%; transform:translate(-50%,-50%); transition:width .3s,height .3s; mix-blend-mode:difference; }
+    #cursor-ring { position:fixed; top:0; left:0; z-index:9998; pointer-events:none; width:36px; height:36px; border:1px solid rgba(201,169,110,.4); border-radius:50%; transform:translate(-50%,-50%); transition:transform .35s cubic-bezier(.25,.1,.25,1),width .3s,height .3s; }
+    #page-veil { position:fixed; inset:0; z-index:9000; background:var(--black); pointer-events:none; opacity:0; transition:opacity .55s ease; }
+    #read-progress { position:fixed; top:0; left:0; height:2px; background:linear-gradient(to right,var(--gold-dim),var(--gold)); z-index:200; width:0%; transition:width .1s linear; }
+
+    nav { position:fixed; top:0; left:0; right:0; z-index:100; padding:20px 48px; display:flex; align-items:center; justify-content:space-between; background:linear-gradient(to bottom,rgba(8,8,14,.95) 0%,transparent 100%); transition:background .4s; }
+    nav.scrolled { background:rgba(8,8,14,.97); border-bottom:1px solid rgba(201,169,110,.1); }
+    .nav-logo { font-family:'Cormorant Garamond',serif; font-size:.85rem; letter-spacing:.15em; color:var(--gold); text-decoration:none; text-transform:uppercase; }
+    .nav-links { display:flex; gap:32px; list-style:none; }
+    .nav-links a { font-size:.7rem; letter-spacing:.12em; text-transform:uppercase; color:var(--mist); text-decoration:none; transition:color .3s; }
+    .nav-links a:hover { color:var(--gold); }
+
+    .chapter-header { padding:155px 0 70px; text-align:center; position:relative; overflow:hidden; }
+    .chapter-header::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(20,14,40,.5) 0%,transparent 70%); }
+    .chapter-bg-roman { font-family:'Cormorant Garamond',serif; font-size:clamp(6rem,14vw,12rem); font-weight:300; line-height:1; color:rgba(201,169,110,.055); position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); pointer-events:none; user-select:none; white-space:nowrap; }
+    .chapter-eyebrow { font-size:.62rem; letter-spacing:.3em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:18px; position:relative; }
+    .chapter-num-label { font-family:'Cormorant Garamond',serif; font-size:.78rem; letter-spacing:.22em; text-transform:uppercase; color:var(--gold); margin-bottom:10px; position:relative; }
+    .chapter-title-main { font-family:'Cormorant Garamond',serif; font-size:clamp(2.4rem,5.5vw,4.2rem); font-weight:300; font-style:italic; color:var(--white); margin-bottom:28px; position:relative; }
+    .chapter-ornament { display:flex; align-items:center; justify-content:center; gap:16px; position:relative; }
+    .chapter-ornament::before,.chapter-ornament::after { content:''; width:56px; height:1px; background:linear-gradient(to right,transparent,var(--gold-dim)); }
+    .chapter-ornament::after { transform:scaleX(-1); }
+    .chapter-ornament span { font-size:.5rem; color:var(--gold); letter-spacing:.3em; }
+
+    .story-wrap { max-width:668px; margin:0 auto; padding:60px 32px 100px; }
+
+    .opening-quote { font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-style:italic; font-weight:300; color:var(--gold-pale); line-height:1.75; border-left:2px solid var(--gold-dim); padding-left:22px; margin:0 0 52px; opacity:0; transform:translateY(18px); transition:opacity .85s ease,transform .85s ease; }
+    .opening-quote.visible { opacity:1; transform:translateY(0); }
+
+    .story-para { font-family:'Cormorant Garamond',serif; font-size:1.13rem; font-weight:300; line-height:1.95; color:var(--silver); margin-bottom:26px; opacity:0; transform:translateY(14px); transition:opacity .7s ease,transform .7s ease; }
+    .story-para.visible { opacity:1; transform:translateY(0); }
+    .story-para.dropcap::first-letter { font-family:'Cormorant Garamond',serif; font-size:4.4rem; font-weight:600; color:var(--gold); float:left; line-height:.76; margin:6px 11px 0 0; }
+    .story-para em { font-style:italic; color:var(--white); }
+
+    .scene-break { text-align:center; color:var(--gold-dim); letter-spacing:.35em; margin:44px 0; font-size:.75rem; opacity:0; transform:translateY(10px); transition:opacity .6s ease,transform .6s ease; }
+    .scene-break.visible { opacity:1; transform:translateY(0); }
+
+    /* Closing line special style */
+    .closing-line { font-family:'Cormorant Garamond',serif; font-size:1.13rem; font-style:italic; color:var(--gold-pale); text-align:center; line-height:1.9; margin-top:16px; opacity:0; transform:translateY(14px); transition:opacity .9s ease,transform .9s ease; }
+    .closing-line.visible { opacity:1; transform:translateY(0); }
+
+    .chapter-nav { border-top:1px solid rgba(201,169,110,.12); padding:44px 32px; max-width:668px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; }
+    .ch-nav-btn { display:flex; align-items:center; gap:12px; text-decoration:none; color:var(--mist); font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; transition:color .3s; }
+    .ch-nav-btn:hover { color:var(--gold); }
+    .ch-nav-btn .arrow { font-size:1.1rem; transition:transform .3s; }
+    .ch-nav-btn:hover .arrow { transform:translateX(-4px); }
+    .ch-nav-btn.next:hover .arrow { transform:translateX(4px); }
+    .ch-nav-btn .ch-label { font-family:'Cormorant Garamond',serif; font-size:.95rem; font-style:italic; display:block; color:var(--silver); }
+    .ch-nav-mini { font-size:.62rem; letter-spacing:.15em; text-transform:uppercase; color:var(--mist); display:block; margin-bottom:3px; }
+    .ch-nav-center { font-family:'Cormorant Garamond',serif; font-size:.72rem; letter-spacing:.2em; color:var(--gold-dim); text-transform:uppercase; text-decoration:none; transition:color .3s; }
+    .ch-nav-center:hover { color:var(--gold); }
+
+    #scroll-top { position:fixed; bottom:36px; right:36px; width:42px; height:42px; border:1px solid rgba(201,169,110,.3); border-radius:50%; background:rgba(8,8,14,.85); color:var(--gold); font-size:.95rem; display:flex; align-items:center; justify-content:center; cursor:none; opacity:0; transform:translateY(8px); transition:opacity .3s,transform .3s,border-color .3s; text-decoration:none; }
+    #scroll-top.visible { opacity:1; transform:translateY(0); }
+    #scroll-top:hover { border-color:var(--gold); }
+
+    @media(max-width:600px){ nav{padding:16px 20px;} .story-wrap{padding:44px 20px 72px;} .chapter-nav{padding:28px 20px;flex-direction:column;gap:20px;text-align:center;} }
+  </style>
+</head>
+<body>
+
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
+  <div id="page-veil"></div>
+  <div id="read-progress"></div>
+
+  <nav id="nav">
+    <a class="nav-logo" href="index.html">Beneath The Sicilian Vows</a>
+    <ul class="nav-links">
+      <li><a href="index.html#chapters">Chapters</a></li>
+      <li><a href="index.html#synopsis">Synopsis</a></li>
+      <li><a href="https://www.wattpad.com/story/413009524" target="_blank">Wattpad</a></li>
+    </ul>
+  </nav>
+
+  <header class="chapter-header">
+    <div class="chapter-bg-roman">III</div>
+    <p class="chapter-eyebrow">Beneath The Sicilian Vows</p>
+    <p class="chapter-num-label">Chapter Three</p>
+    <h1 class="chapter-title-main">The Space Between</h1>
+    <div class="chapter-ornament"><span>✦</span></div>
+  </header>
+
+  <article class="story-wrap">
+
+    <blockquote class="opening-quote reveal">
+      "Rumah itu terlalu besar untuk dua orang yang masih tidak tahu bagaimana untuk menjadi satu pasangan."
+    </blockquote>
+
+    <p class="story-para dropcap reveal">
+      Sicily di luar tingkap bergerak seperti biasa — laut, angin, dan kehidupan yang tidak pernah peduli tentang perkahwinan mana pun yang baru berlaku di dalamnya. Tapi di dalam rumah itu... setiap langkah terasa diperhatikan, walaupun tiada siapa bersuara.
+    </p>
+
+    <p class="story-para reveal">
+      Xandra berdiri di dapur. Bukan kerana dia mahu memasak. Tapi kerana dia tidak pernah tahu apa yang perlu dilakukan dalam ruang yang bukan sepenuhnya miliknya — dan berdiri di satu sudut yang ada tujuan selalu lebih senang daripada duduk diam tanpa jawapan.
+    </p>
+
+    <p class="story-para reveal">
+      Xavier duduk di meja makan. Sutnya sudah ditukar kepada pakaian lebih santai, tapi aura dia tetap sama — terkawal, tenang, terlalu senyap untuk seseorang yang hidup dalam dunia yang tidak pernah benar-benar senyap.
+    </p>
+
+    <p class="story-para reveal">
+      Dia memerhati Xandra tanpa gangguan. Bukan cara lelaki yang tergoda. Lebih kepada cara seseorang yang cuba memahami sesuatu yang tidak masuk dalam mana-mana formula yang dia ada.
+    </p>
+
+    <p class="story-para reveal">
+      <em>"Awak selalu berdiri kalau tak tahu nak buat apa?"</em>
+    </p>
+
+    <p class="story-para reveal">
+      Xandra tidak berpaling. <em>"Saya tak suka duduk di tempat yang saya tak pilih."</em>
+    </p>
+
+    <p class="story-para reveal">
+      Xavier angguk perlahan. <em>"Rumah ini bukan pilihan saya juga."</em>
+    </p>
+
+    <p class="story-para reveal">
+      Jawapan itu membuat Xandra berhenti. Dia berpaling sedikit. <em>"Jadi kita sama."</em>
+    </p>
+
+    <p class="story-para reveal">
+      Xavier memandangnya terus. <em>"Tak."</em>
+    </p>
+
+    <p class="story-para reveal">
+      Pause.
+    </p>
+
+    <p class="story-para reveal">
+      <em>"Awak masih cuba melawan. Saya dah lama berhenti."</em>
+    </p>
+
+    <p class="story-para reveal">
+      Ayat itu tidak kedengaran seperti kemenangan. Tidak juga seperti kekalahan. Lebih kepada fakta yang terlalu lama duduk dalam diam.
+    </p>
+
+    <p class="story-para reveal">
+      Beberapa saat kemudian, Xandra duduk di hujung meja. Bukan jauh. Bukan dekat sangat. Tapi cukup untuk kekal dalam ruang Xavier.
+    </p>
+
+    <p class="story-para reveal">
+      <em>"Awak selalu buat keputusan macam ni?"</em> Xandra bertanya, suaranya datar tapi matanya tidak. <em>"Ambil orang tanpa tanya pendapat mereka."</em>
+    </p>
+
+    <p class="story-para reveal">
+      Xavier tidak terus menjawab. <em>"Saya tak ambil orang."</em>
+    </p>
+
+    <p class="story-para reveal">
+      <em>"Awak ambil saya."</em>
+    </p>
+
+    <p class="story-para reveal">
+      Xavier pandang dia terus. Dan untuk pertama kali — ada sesuatu yang jujur dalam matanya.
+    </p>
+
+    <p class="story-para reveal">
+      <em>"Saya ambil situasi yang dah ditetapkan sebelum saya masuk pun."</em>
+    </p>
+
+    <p class="story-para reveal">
+      Xandra tidak menjawab. Kerana itu bukan jawapan yang dia boleh tolak.
+    </p>
+
+    <p class="story-para reveal">
+      Xandra bangun untuk ambil air. Xavier tidak halang. Tidak ikut. Tapi matanya mengikuti setiap pergerakannya tanpa dia sedar dia melakukannya.
+    </p>
+
+    <p class="story-para reveal">
+      <em>"Awak tak takut saya?"</em>
+    </p>
+
+    <p class="story-para reveal">
+      Xandra berhenti di sinki. Dia ketawa kecil — bukan kerana lucu, tapi kerana soalan itu terlalu jujur untuk dunia yang penuh dengan orang yang tidak pernah jujur.
+    </p>
+
+    <p class="story-para reveal">
+      <em>"Saya patut takut?"</em>
+    </p>
+
+    <p class="story-para reveal">
+      <em>"Orang lain takut."</em>
+    </p>
+
+    <p class="story-para reveal">
+      Xandra berpaling perlahan. <em>"Orang lain bukan saya."</em>
+    </p>
+
+    <p class="story-para reveal">
+      Sunyi. Dan untuk pertama kali sejak malam bermula — Xavier tidak ada jawapan segera.
+    </p>
+
+    <div class="scene-break reveal">─ · ─</div>
+
+    <p class="story-para reveal">
+      Malam itu mereka berada dalam ruang tamu yang sama. Xandra di sofa, buku di tangan. Xavier di kerusi sebelah, laptop terbuka. Tiada muzik. Tiada percakapan yang dipaksa.
+    </p>
+
+    <p class="story-para reveal">
+      Tapi sesuatu berubah — perlahan, hampir tidak dapat dikesan. Xandra tidak lagi rasa perlu memerhati setiap gerak Xavier seperti memerhati ancaman. Dan Xavier... tidak lagi rasa perlu memastikan dia masih ada di situ setiap kali dia angkat kepala.
+    </p>
+
+    <p class="story-para reveal">
+      Bukan perasaan. Tapi kebiasaan yang mula terbentuk tanpa izin.
+    </p>
+
+    <p class="story-para reveal">
+      Jam menunjukkan lewat malam bila Xandra tertidur di sofa tanpa sedar. Buku terjatuh perlahan ke lantai. Xavier perasan bunyi itu. Dia berhenti menaip. Pandangannya beralih ke arah Xandra.
+    </p>
+
+    <p class="story-para reveal">
+      Waktu tidur, wajahnya tidak dingin seperti siang. Tidak berjaga, tidak bersiap untuk pertarungan seterusnya. Hanya... manusia. Seseorang yang penat tapi tidak mahu mengaku penat.
+    </p>
+
+    <p class="story-para reveal">
+      Xavier duduk diam untuk beberapa saat. Seolah-olah otaknya sedang cuba memutuskan tindakan yang paling logik — dan gagal menemui satu.
+    </p>
+
+    <p class="story-para reveal">
+      Akhirnya dia bangun. Ambil selimut dari hujung sofa. Dan letakkan perlahan di atas Xandra — gerakan yang terlalu berhati-hati untuk seseorang yang biasanya tidak pernah berfikir dua kali.
+    </p>
+
+    <p class="story-para reveal">
+      Dia berdiri di situ sebentar, memandang wajah yang tadi tidak pernah berhenti melawan dia sejak pagi. Sekarang sunyi sahaja. Dan pelik — ketenangan itu tidak terasa asing langsung.
+    </p>
+
+    <p class="story-para reveal">
+      Xavier berpaling. Kembali ke mejanya. Tapi malam itu, skrin laptopnya terbuka lama tanpa satu huruf pun ditaip.
+    </p>
+
+    <div class="scene-break reveal">─ · ─</div>
+
+    <p class="story-para reveal">
+      Di luar, Sicily hidup seperti biasa — laut yang tidak tidur, lampu yang tidak padam, dunia yang tidak peduli.
+    </p>
+
+    <p class="closing-line reveal">
+      Tapi di dalam rumah itu... dua orang yang berkahwin bukan atas nama cinta sedang mempelajari sesuatu yang jauh lebih berbahaya daripada mafia, daripada kontrak, daripada semua perjanjian yang mereka tandatangani hari ini.<br><br>
+      Kebiasaan. Dan kebiasaan — tidak pernah meminta izin sebelum ia jadi sesuatu yang lain.
+    </p>
+
+  </article>
+
+  <nav class="chapter-nav">
+    <a class="ch-nav-btn prev" href="chapter-02-the-ceremony.html">
+      <span class="arrow">←</span>
+      <span>
+        <span class="ch-nav-mini">Sebelumnya</span>
+        <span class="ch-label">The Ceremony</span>
+      </span>
+    </a>
+    <a class="ch-nav-center" href="index.html#chapters">✦ Semua Chapter</a>
+    <a class="ch-nav-btn next" href="chapter-04-too-close.html">
+      <span style="text-align:right">
+        <span class="ch-nav-mini">Seterusnya</span>
+        <span class="ch-label">Too Close</span>
+      </span>
+      <span class="arrow">→</span>
+    </a>
+  </nav>
+
+  <a href="#" id="scroll-top" aria-label="Scroll to top">↑</a>
+
+  <script>
+    const cursor=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
+    let mx=0,my=0,rx=0,ry=0;
+    document.addEventListener('mousemove',e=>{ mx=e.clientX; my=e.clientY; cursor.style.left=mx+'px'; cursor.style.top=my+'px'; });
+    (function animRing(){ rx+=(mx-rx)*.12; ry+=(my-ry)*.12; ring.style.left=rx+'px'; ring.style.top=ry+'px'; requestAnimationFrame(animRing); })();
+    document.querySelectorAll('a,button').forEach(el=>{ el.addEventListener('mouseenter',()=>{ cursor.style.width='6px'; cursor.style.height='6px'; ring.style.width='54px'; ring.style.height='54px'; }); el.addEventListener('mouseleave',()=>{ cursor.style.width='10px'; cursor.style.height='10px'; ring.style.width='36px'; ring.style.height='36px'; }); });
+
+    const nav=document.getElementById('nav');
+    window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',window.scrollY>60));
+
+    const bar=document.getElementById('read-progress');
+    window.addEventListener('scroll',()=>{ bar.style.width=(window.scrollY/(document.documentElement.scrollHeight-window.innerHeight)*100)+'%'; });
+
+    const stBtn=document.getElementById('scroll-top');
+    window.addEventListener('scroll',()=>stBtn.classList.toggle('visible',window.scrollY>400));
+    stBtn.addEventListener('click',e=>{ e.preventDefault(); window.scrollTo({top:0,behavior:'smooth'}); });
+
+    const io=new IntersectionObserver((entries)=>{ entries.forEach((e,i)=>{ if(e.isIntersecting){ setTimeout(()=>e.target.classList.add('visible'),i*55); io.unobserve(e.target); } }); },{threshold:.08,rootMargin:'0px 0px -28px 0px'});
+    document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+    const veil=document.getElementById('page-veil');
+    veil.style.cssText='opacity:1;transition:none';
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{ veil.style.transition='opacity 0.6s ease'; veil.style.opacity='0'; }));
+    document.querySelectorAll('a[href]').forEach(link=>{ const href=link.getAttribute('href'); if(!href||href.startsWith('#')||href.startsWith('http')) return; link.addEventListener('click',e=>{ e.preventDefault(); veil.style.opacity='1'; setTimeout(()=>window.location.href=href,540); }); });
+  </script>
+</body>
+</html>
